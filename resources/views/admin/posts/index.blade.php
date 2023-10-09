@@ -27,7 +27,15 @@
         <td>{{ $post->image }}</td>
         <td>{{ $post->published_at?->format("d/m/Y H:i") }}</td>
         <td>
-            <a href="{{ route('admin.posts.show', $post->slug) }}" class="btn btn-info">Dettagli</a>
+          <a href="{{ route('admin.posts.show', $post->slug) }}" class="btn btn-info">Dettagli</a>
+          <a href="{{ route('admin.posts.edit', $post->slug) }}" class="btn btn-warning">Modifica</a>
+
+          <form action="{{route('admin.posts.destroy', $post->slug)}}" method="POST">
+            @csrf()
+            @method("DELETE")
+
+            <button class="btn btn-danger">Elimina</button>
+          </form>
         </td>
       </tr>
       @endforeach
