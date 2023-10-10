@@ -24,17 +24,17 @@
       @foreach ($posts as $post)
       <tr>
         <td>{{ $post->title }}</td>
-        <td>{{ $post->image }}</td>
+        <td><img src={{ asset('/storage/' . $post->image) }} class="img-thumbnail" style="width: 60px"></td>
         <td>{{ $post->published_at?->format("d/m/Y H:i") }}</td>
-        <td>
-          <a href="{{ route('admin.posts.show', $post->slug) }}" class="btn btn-info">Dettagli</a>
-          <a href="{{ route('admin.posts.edit', $post->slug) }}" class="btn btn-warning">Modifica</a>
+        <td class="text-nowrap text-end">
+          <a href="{{ route('admin.posts.show', $post->slug) }}" class="btn btn-info"><i class="fas fa-eye"></i></a>
+          <a href="{{ route('admin.posts.edit', $post->slug) }}" class="btn btn-warning"><i class="fas fa-edit"></i></a>
 
-          <form action="{{route('admin.posts.destroy', $post->slug)}}" method="POST">
+          <form action="{{route('admin.posts.destroy', $post->slug)}}" method="POST" class="d-inline-block">
             @csrf()
             @method("DELETE")
 
-            <button class="btn btn-danger">Elimina</button>
+            <button class="btn btn-danger"><i class="fas fa-trash"></i></button>
           </form>
         </td>
       </tr>

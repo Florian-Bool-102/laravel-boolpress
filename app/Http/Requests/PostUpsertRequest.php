@@ -32,7 +32,8 @@ class PostUpsertRequest extends FormRequest {
         return [
             "title" => "required|max:255",
             "body" => "required",
-            "image" => "required|max:255",
+            "image" => "nullable|image|max:6000",
+            "image_link" => "nullable|max:255",
             "is_published" => "nullable|boolean",
         ];
     }
@@ -48,7 +49,7 @@ class PostUpsertRequest extends FormRequest {
             'title.max' => 'Mi sembra che il titolo sia un po\' troppo lungo',
             'body.required' => 'Di cosa parla questo post?',
             'image.required' => 'E\' difficile usare così tanto l\'immaginazione.',
-            'image.max' => 'Stai scrivendo la divina commedia?',
+            'image.max' => 'Immagine troppo grande. Il limite è 4MB',
         ];
     }
 }

@@ -6,7 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\PostUpsertRequest;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Symfony\Component\Uid\Uuid;
 
 class PostController extends Controller {
 
@@ -36,6 +39,9 @@ class PostController extends Controller {
         // $post->fill($data);
         // $post->save()
 
+        // salvo il file nel filesystem
+        $data["image"] = Storage::put("posts", $data["image"]);
+
         // Il ::create esegue il fill e il save in un unico comando
         $post = Post::create($data);
 
@@ -50,6 +56,7 @@ class PostController extends Controller {
 
     public  function update(PostUpsertRequest $request, $slug) {
         $data = $request->validated();
+
         $post = Post::where("slug", $slug)->firstOrFail();
 
         // controllo se il titolo è cambiato. Solo in quel caso rigenero lo slug
@@ -74,6 +81,32 @@ class PostController extends Controller {
             // $post->save();
         }
 
+        if (isset($data["image_link"])) {
+            // Recupero il codice binario dell'immagine dal link
+            $imgLink = file_get_contents($data["image_link"]);
+
+            // creo un nome per il file
+            $path = "posts/" . uniqid();
+
+            // creo il file inserendo il codice binario come contenuto
+            File::put(storage_path("app/public/" . $path), $imgLink);
+
+            // salvo il path nel database
+            $data["image"] = $path;
+        } else if (isset($data["image"])) {
+            // siccome non caricherò un immagine ad ogni update, se quella esistente mi va bene
+            // prevedo il caso in cui non ci sarà l'immagine e quindi non faccio lo Storage::put
+            // se esiste già un'immagine, prima la cancello
+            if ($post->image) {
+                Storage::delete($post->image);
+            }
+
+            // salvo il file nel filesystem
+            $image_path = Storage::put("posts", $data["image"]);
+
+            $data["image"] = $image_path;
+        }
+
         $post->update($data);
 
         return redirect()->route("admin.posts.show", $post->slug);
@@ -81,6 +114,11 @@ class PostController extends Controller {
 
     public function destroy($slug) {
         $post = Post::where("slug", $slug)->firstOrFail();
+
+        // se il posta ha un immagine, cancellando il post l'immagine rimande nel limbo
+        if ($post->image) {
+            Storage::delete($post->image);
+        }
 
         $post->delete();
 
