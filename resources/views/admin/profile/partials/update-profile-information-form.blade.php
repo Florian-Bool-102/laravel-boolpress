@@ -13,7 +13,7 @@
         @csrf
     </form>
 
-    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
+    <form method="post" action="{{ route('admin.profile.update') }}" class="mt-6 space-y-6">
         @csrf
         @method('patch')
 
@@ -57,6 +57,16 @@
                 @endif
             </div>
             @endif
+        </div>
+
+        <div class="mb-2">
+            <label for="phone">{{__('Numero di telefono')}}</label>
+            <input class="form-control" type="text" name="phone" id="phone" autocomplete="phone" value="{{old('phone', $user->userDetail->phone)}}" required autofocus>
+            @error('phone')
+            <span class="invalid-feedback" role="alert">
+                <strong>{{ $errors->get('phone')}}</strong>
+            </span>
+            @enderror
         </div>
 
         <div class="d-flex align-items-center gap-4">

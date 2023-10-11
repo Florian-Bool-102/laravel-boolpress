@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PostUpsertRequest;
+use App\Models\Category;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -26,7 +28,11 @@ class PostController extends Controller {
     }
 
     public function create() {
-        return view("admin.posts.create");
+        $categories = Category::all();
+
+        return view("admin.posts.create", [
+            "categories" => $categories
+        ]);
     }
 
     public function store(PostUpsertRequest $request) {
@@ -41,6 +47,7 @@ class PostController extends Controller {
 
         // salvo il file nel filesystem
         $data["image"] = Storage::put("posts", $data["image"]);
+        $data["user_id"] = Auth::id();
 
         // Il ::create esegue il fill e il save in un unico comando
         $post = Post::create($data);
@@ -50,8 +57,9 @@ class PostController extends Controller {
 
     public function edit($slug) {
         $post = Post::where("slug", $slug)->firstOrFail();
+        $categories = Category::all();
 
-        return view("admin.posts.edit", compact("post"));
+        return view("admin.posts.edit", compact("post", "categories"));
     }
 
     public  function update(PostUpsertRequest $request, $slug) {
@@ -113,6 +121,10 @@ class PostController extends Controller {
     }
 
     public function destroy($slug) {
+        if (Auth::user()->email !== "florian.leica@gmail.com") {
+            return abort(403);
+        }
+
         $post = Post::where("slug", $slug)->firstOrFail();
 
         // se il posta ha un immagine, cancellando il post l'immagine rimande nel limbo

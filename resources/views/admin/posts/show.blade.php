@@ -11,6 +11,14 @@
 
   <h1>{{ $post->title }}</h1>
 
+  <span class="badge mb-4 mt-3" style="background-color: rgb({{ $post->category->color }})">
+    {{ $post->category->name }} ({{ $post->category->description }})
+  </span>
+
+  <div>
+    Scritto da {{ $post->user->name }}
+  </div>
+
   <div class="">
     <img src="{{ asset('/storage/' . $post->image) }}" alt="" class="img-fluid">
   </div>

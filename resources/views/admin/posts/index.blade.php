@@ -15,6 +15,7 @@
       <tr>
         <td>Titolo</td>
         <td>Immagine</td>
+        <td>Categoria</td>
         <td>Data Pubblicazione</td>
         <td></td>
       </tr>
@@ -25,6 +26,9 @@
       <tr>
         <td>{{ $post->title }}</td>
         <td><img src={{ asset('/storage/' . $post->image) }} class="img-thumbnail" style="width: 60px"></td>
+
+        <td><span class="badge" style="background-color: rgb({{ $post->category->color }})">{{ $post->category->name }}</span></td>
+
         <td>{{ $post->published_at?->format("d/m/Y H:i") }}</td>
         <td class="text-nowrap text-end">
           <a href="{{ route('admin.posts.show', $post->slug) }}" class="btn btn-info"><i class="fas fa-eye"></i></a>

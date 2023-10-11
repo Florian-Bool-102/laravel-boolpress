@@ -29,18 +29,29 @@
     <div class="mb-3"><label class="form-label">Data Pubblicazione</label><input type="date" class="form-control" name="published_at" value="{{ $post->published_at?->toDateString() }}"></div>
 
     <div class="mb-3">
-        <label class="form-label">Immagine</label>
-        @if($post->image)
-            <img src="{{ asset('/storage/' . $post->image) }}" alt="" class="img-thumbnail" style="width: 100px">
-        @endif
+      <label class="form-label">Categoria</label>
+      <select class="form-select" name="category_id">
+        @foreach ($categories as $category)
+        <option value="{{ $category->id }}" {{ $post->category_id === $category->id ? 'selected' : '' }}>
+          {{$category->name}}
+        </option>
+        @endforeach
+      </select>
+    </div>
 
-        <div class="input-group">
-            <label class="btn btn-outline-secondary" type="button" id="inputGroupFileAddon04">
-                <input type="file" class="form-control d-none" name="image" accept="image/*">
-                Scegli
-            </label>
-            <input type="text" class="form-control" name="image_link">
-          </div>
+    <div class="mb-3">
+      <label class="form-label">Immagine</label>
+      @if($post->image)
+      <img src="{{ asset('/storage/' . $post->image) }}" alt="" class="img-thumbnail" style="width: 100px">
+      @endif
+
+      <div class="input-group">
+        <label class="btn btn-outline-secondary" type="button" id="inputGroupFileAddon04">
+          <input type="file" class="form-control d-none" name="image" accept="image/*">
+          Scegli
+        </label>
+        <input type="text" class="form-control" name="image_link">
+      </div>
     </div>
 
     <div class="mb-3"><label class="form-label">Contenuto</label><textarea class="form-control" name="body">{{ $post->body }}</textarea></div>

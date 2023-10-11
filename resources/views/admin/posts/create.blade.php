@@ -25,9 +25,19 @@
     @csrf()
 
     <div class="mb-3"><label class="form-label">Titolo</label><input type="text" class="form-control" name="title"></div>
+
     <div class="mb-3">
-        <label class="form-label">Immagine</label>
-        <input type="file" accept="image/*" class="form-control" name="image">
+      <label class="form-label">Categoria</label>
+      <select class="form-select" name="category_id">
+        @foreach ($categories as $category)
+            <option value="{{ $category->id }}">{{$category->name}}</option>
+        @endforeach
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Immagine</label>
+      <input type="file" accept="image/*" class="form-control" name="image">
     </div>
     <div class="mb-3"><label class="form-label">Contenuto</label><textarea class="form-control" name="body"></textarea></div>
 
