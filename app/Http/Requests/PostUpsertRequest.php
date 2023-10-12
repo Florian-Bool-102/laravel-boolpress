@@ -36,7 +36,8 @@ class PostUpsertRequest extends FormRequest {
             "image_link" => "nullable|max:255",
             "is_published" => "nullable|boolean",
             // exists: si assicura che l'id passato esista nella tabella indicata
-            "category_id" => "nullable|exists:categories,id"
+            "category_id" => "nullable|exists:categories,id",
+            "tags" => "nullable",
         ];
     }
 

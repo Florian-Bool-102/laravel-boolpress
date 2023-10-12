@@ -15,8 +15,15 @@
     {{ $post->category->name }} ({{ $post->category->description }})
   </span>
 
+  {{-- tags --}}
   <div>
-    Scritto da {{ $post->user->name }}
+    @foreach ($post->tags as $tag)
+        <div class="badge" style="background-color: rgb({{ $tag->color }})">{{ $tag->name }}</div>
+    @endforeach
+  </div>
+
+  <div>
+    Scritto da {{ $post->user?->name }}
   </div>
 
   <div class="">
