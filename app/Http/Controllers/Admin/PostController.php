@@ -10,6 +10,7 @@ use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Symfony\Component\Uid\Uuid;
@@ -29,6 +30,10 @@ class PostController extends Controller {
     }
 
     public function create() {
+        if (Auth::user()->role->name !== "admin") {
+            return redirect()->route("admin.posts.index");
+        }
+
         $categories = Category::all();
         $tags = Tag::all();
 

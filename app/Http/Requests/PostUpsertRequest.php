@@ -14,7 +14,8 @@ class PostUpsertRequest extends FormRequest {
         $user = Auth::user();
 
         // se l'email é florian.leica@gmail.com, lo faccio passare, altrimenti no.
-        if ($user->email === "florian.leica@gmail.com") {
+        // if ($user->email === "florian.leica@gmail.com") {
+        if ($user->role->name === "admin") {
             // se ritorno true l'operazione viene permessa
             return true;
         }

@@ -6,9 +6,11 @@
 
   <h1>Lista dei post</h1>
 
+  @if(Auth::user()->role->name === 'admin')
   <div class="bg-light my-2">
     <a href="{{ route('admin.posts.create') }}" class="btn btn-link">Nuovo post</a>
   </div>
+  @endif
 
   <table class="table">
     <thead>
@@ -32,6 +34,8 @@
         <td>{{ $post->published_at?->format("d/m/Y H:i") }}</td>
         <td class="text-nowrap text-end">
           <a href="{{ route('admin.posts.show', $post->slug) }}" class="btn btn-info"><i class="fas fa-eye"></i></a>
+
+          @if(Auth::user()->role->name === 'admin')
           <a href="{{ route('admin.posts.edit', $post->slug) }}" class="btn btn-warning"><i class="fas fa-edit"></i></a>
 
           <form action="{{route('admin.posts.destroy', $post->slug)}}" method="POST" class="d-inline-block">
@@ -40,6 +44,7 @@
 
             <button class="btn btn-danger"><i class="fas fa-trash"></i></button>
           </form>
+          @endif
         </td>
       </tr>
       @endforeach

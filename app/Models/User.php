@@ -55,4 +55,11 @@ class User extends Authenticatable {
     public function userDetail() {
         return $this->hasOne(UserDetail::class);
     }
+
+    /**
+     * Get the roles for the user.
+     */
+    public function role() {
+        return $this->belongsTo(Role::class);
+    }
 }
