@@ -8,13 +8,34 @@ use Illuminate\Http\Request;
 
 class PostController extends Controller {
     public function index() {
+        // leggo le query string ricevute
+        $queryString = request()->query();
+
         // recupero dati dal DB
         // $posts = Post::all();
 
         // recupero dati dal DB e li pagino
-        $posts = Post::with(["user", "category", "tags"])->paginate(3);
+        $query = Post::with(["user", "category", "tags"]);
+
+        // se queryString ha la chiave title, aggiungo questo filtro nella query
+        if(array_key_exists("title", $queryString) && $queryString["title"]) {
+            $query->where("title", "LIKE", "%{$queryString["title"]}%");
+        }
+
+        $posts = $query->paginate();
+        // $posts = Post::with(["user", "category", "tags"])->get();
 
         // restituisco i dati in formato JSON
         return response()->json($posts);
+    }
+
+    public function show($slug) {
+        $post = Post::where("slug", $slug)
+            // recupera le informazioni delle relazioni
+            ->with(["user", "category", "tags"])
+            // ritorna il primo risultato
+            ->first();
+
+        return response()->json($post);
     }
 }
