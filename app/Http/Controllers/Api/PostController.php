@@ -18,7 +18,7 @@ class PostController extends Controller {
         $query = Post::with(["user", "category", "tags"]);
 
         // se queryString ha la chiave title, aggiungo questo filtro nella query
-        if(array_key_exists("title", $queryString) && $queryString["title"]) {
+        if (array_key_exists("title", $queryString) && $queryString["title"]) {
             $query->where("title", "LIKE", "%{$queryString["title"]}%");
         }
 
@@ -35,6 +35,10 @@ class PostController extends Controller {
             ->with(["user", "category", "tags"])
             // ritorna il primo risultato
             ->first();
+
+        if (!$post) {
+            abort(404);
+        }
 
         return response()->json($post);
     }
