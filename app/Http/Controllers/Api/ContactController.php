@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Mail\NewContact;
+use App\Mail\NewContactReceived;
 use App\Models\Contact;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
 class ContactController extends Controller {
@@ -16,9 +19,6 @@ class ContactController extends Controller {
             'attachment' => 'nullable|file|max:5000'
         ]);
 
-        // Send an email
-        // Mail::to($data['email'])->send(new ContactFormMail($data));
-
         // salvo dentro la tabella contacts i dati ricevuti
         $newContact = new Contact();
 
@@ -27,7 +27,7 @@ class ContactController extends Controller {
         $newContact->message = $data["message"];
 
         // salvo il file allegato se c'è
-        if (key_exists("attachment", $data)) {
+        if (key_exists("attachment", $data) && $data["attachment"]) {
             $path = Storage::put("contacts", $data["attachment"]);
             $newContact->attachment = $path;
 
@@ -36,6 +36,12 @@ class ContactController extends Controller {
         }
 
         $newContact->save();
+
+        // Email di conferma all'utente che ha compilato il form
+        Mail::to($data['email'])->send(new NewContact($data));
+
+        // mi auto invio una mail per notificare la un nuovo contatto
+        Mail::to('florian.leica@webartisanbros.com')->send(new NewContactReceived($data));
 
         return response()->json([
             'message' => "Thank you {$data['name']} for your message. We will be in touch soon."

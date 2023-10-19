@@ -29,21 +29,21 @@ Route::middleware(['auth', 'verified'])
     ->prefix("admin")
     ->name("admin.")
     ->group(function () {
-    // CREATE
-    Route::get("/posts/create", [PostController::class, "create"])->name("posts.create");
-    Route::post("/posts", [PostController::class, "store"])->name("posts.store");
+        // CREATE
+        Route::get("/posts/create", [PostController::class, "create"])->name("posts.create");
+        Route::post("/posts", [PostController::class, "store"])->name("posts.store");
 
-    // READ
-    Route::get("/posts", [PostController::class, "index"])->name("posts.index");
-    Route::get("/posts/{post}", [PostController::class, "show"])->name("posts.show");
+        // READ
+        Route::get("/posts", [PostController::class, "index"])->name("posts.index");
+        Route::get("/posts/{post}", [PostController::class, "show"])->name("posts.show");
 
-    // UPDATE
-    Route::get("/posts/{post}/edit", [PostController::class, "edit"])->name("posts.edit");
-    Route::patch("/posts/{post}", [PostController::class, "update"])->name("posts.update");
+        // UPDATE
+        Route::get("/posts/{post}/edit", [PostController::class, "edit"])->name("posts.edit");
+        Route::patch("/posts/{post}", [PostController::class, "update"])->name("posts.update");
 
-    // DELETE
-    Route::delete("/posts/{post}", [PostController::class, "destroy"])->name("posts.destroy");
-});
+        // DELETE
+        Route::delete("/posts/{post}", [PostController::class, "destroy"])->name("posts.destroy");
+    });
 
 Route::get("/posts", [GuestPostController::class, "index"])->name("posts.index");
 
@@ -54,4 +54,16 @@ Route::middleware('auth')->group(function () {
     Route::delete('/admin/profile', [ProfileController::class, 'destroy'])->name('admin.profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
+
+Route::get("/mails/demo", function () {
+    return new App\Mail\Demo();
+});
+
+Route::get("/mails/new-contact-received", function () {
+    return new App\Mail\NewContactReceived([
+        "name" => "Mario Rossi",
+        "email" => "mario.rossi@gmail.com",
+        "message" => "lorem ipsum dolor sit amet"
+    ]);
+});
